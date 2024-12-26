@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.payment">
+    <!-- 리절트 맵 정의 -->
+    <resultMap id="paymentResult" type="PaymentVO">
+        <result property="impUid" column="imp_uid" />
+        <result property="merchantUid" column="merchant_uid" />
+        <result property="amount" column="amount" />
+        <result property="payMethod" column="pay_method" />
+        <result property="paymentStatus" column="payment_status" />
+        <result property="orderId" column="order_id" />
+    </resultMap>
+
+    <!-- 결제 정보 추가 -->
+    <insert id="insertPayment" parameterType="PaymentVO">
+        <![CDATA[
+            INSERT INTO t_shopping_payment (
+                imp_uid, merchant_uid, amount, pay_method, 
+                payment_status, order_id
+            ) VALUES (
+                #{impUid}, #{merchantUid}, #{amount}, #{payMethod}, 
+                #{paymentStatus}, #{orderId}
+            )
+        ]]>
+    </insert>
+
+    <!-- 결제 정보 조회 -->
+    <select id="selectPaymentByOrderId" resultMap="paymentResult" parameterType="String">
+        <![CDATA[
+            SELECT * FROM t_shopping_payment
+            WHERE order_id = #{orderId}
+        ]]>
+    </select>
+    <delete id="deleteMyOrder" parameterType="String">
+    	<![CDATA[
+        DELETE FROM t_shopping_payment
+        WHERE order_id = #{order_id}
+        ]]>
+    </delete>
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration 	PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+  <typeAliases>
+    <typeAlias type="com.bookplus.goods.vo.GoodsVO" alias="goodsVO" />
+    <typeAlias type="com.bookplus.member.vo.MemberVO" alias="memberVO" />
+    <typeAlias type="com.bookplus.cart.vo.CartVO" alias="cartVO" />
+    <typeAlias type="com.bookplus.order.vo.OrderVO" alias="orderVO" />
+    <typeAlias type="com.bookplus.order.vo.PaymentVO" alias="paymentVO" />
+    <typeAlias type="com.bookplus.mypage.vo.MyPageVO" alias="mypageVO" />
+    <typeAlias type="com.bookplus.API.vo.APIweatherVO" alias="weatherVO" />
+    <typeAlias type="com.bookplus.board.vo.Board" alias="Board" />
+    <typeAlias type="com.bookplus.board.vo.BoardReply" alias="BoardReply" />
+
+  </typeAliases>
+</configuration>
+
+
+

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bookplus.API.mappers.APIWeatherMapper">
+    <select id="selectBooksByTag" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT goods_title
+        FROM BookPlus.t_shopping_goods
+        WHERE goods_title LIKE CONCAT('%', #{goods_title}, '%')
+    </select>
+</mapper>

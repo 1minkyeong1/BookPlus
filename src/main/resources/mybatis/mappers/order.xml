@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.order">
+    <!-- 리절트 맵 정의 -->
+    <resultMap id="orderResult" type="OrderVO">
+        <result property="orderSeqNum" column="order_seq_num" />
+        <result property="orderId" column="order_id" />
+        <result property="orderMemberId" column="order_member_id" />
+        <result property="orderMemberName" column="order_member_name" />
+        <result property="goodsId" column="goods_id" />
+        <result property="goodsTitle" column="goods_title" />
+        <result property="orderGoodsQty" column="order_goods_qty" />
+        <result property="receiverName" column="receiver_name" />
+        <result property="receiverHp1" column="receiver_hp1" />
+        <result property="receiverHp2" column="receiver_hp2" />
+        <result property="receiverHp3" column="receiver_hp3" />
+        <result property="deliveryAddress" column="delivery_address" />
+        <result property="deliveryMessage" column="delivery_message" />
+        <result property="deliveryMethod" column="delivery_method" />
+        <result property="deliveryState" column="delivery_state" />
+        <result property="totalPrice" column="total_price" />
+        <result property="payMethod" column="pay_method" />
+        <result property="paymentStatus" column="payment_status" />
+        <result property="orderDate" column="order_date" />
+    </resultMap>
+
+    <!-- 주문 목록 조회 -->
+    <select id="selectOrderList" resultMap="orderResult" parameterType="String">
+        <![CDATA[
+            SELECT * FROM t_shopping_order
+            WHERE order_member_id = #{orderMemberId}
+            ORDER BY order_date DESC
+        ]]>
+    </select>
+
+    <insert id="insertOrder" parameterType="OrderVO">
+    	<![CDATA[
+		    INSERT INTO t_shopping_order (
+		        order_id, order_member_id, order_member_name, goods_id, goods_title, order_goods_qty,
+		        receiver_name, receiver_hp1, receiver_hp2, receiver_hp3,
+		        delivery_address, delivery_message, total_price, pay_method,
+		        payment_status, order_date
+		    ) VALUES (
+		        #{orderId}, #{orderMemberId}, #{orderMemberName}, #{goodsId}, #{goodsTitle}, #{orderGoodsQty},
+		        #{receiverName}, #{receiverHp1}, #{receiverHp2}, #{receiverHp3},
+		        #{deliveryAddress}, #{deliveryMessage}, #{totalPrice}, #{payMethod},
+		        #{paymentStatus}, NOW()
+		    )
+	    ]]>
+	</insert>
+</mapper>

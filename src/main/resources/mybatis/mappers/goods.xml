@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.goods">
+
+    <resultMap id="goodsResult" type="goodsVO">
+        <result property="goods_id" column="goods_id" />
+        <result property="goods_sort" column="goods_sort" />
+        <result property="goods_title" column="goods_title" />
+        <result property="goods_writer" column="goods_writer" /> 
+        <result property="goods_publisher" column="goods_publisher" />
+        <result property="goods_price" column="goods_price" />
+  		<result property="goods_sales_price" column="goods_sales_price" />
+        <result property="goods_published_date" column="goods_published_date" />
+        <result property="goods_total_page" column="goods_total_page" />
+        <result property="goods_isbn" column="goods_isbn" />
+        <result property="goods_delivery_price" column="goods_delivery_price" />
+        <result property="goods_delivery_date" column="goods_delivery_date" />
+        <result property="goods_status" column="goods_status" />
+        <result property="goods_credate" column="goods_credate" />
+        <result property="goods_fileName" column="goods_fileName" />
+    </resultMap>
+
+<!-- 	<select id="selectAllGoods" resultMap="goodsResult">
+		SELECT * 
+	    FROM t_shopping_goods
+	    ORDER BY goods_credate DESC
+	    LIMIT #{limit} OFFSET #{offset};
+	</select> -->
+<select id="selectAllGoods" resultMap="goodsResult" parameterType="map">
+    SELECT * 
+    FROM t_shopping_goods
+    <where>
+        <if test="category != null and category != ''">
+            <if test="category == '컴퓨터/모바일'">
+                (goods_sort LIKE '%컴퓨터%' OR goods_sort LIKE '%모바일%')
+            </if>
+            <if test="category == '경제/경영'">
+                (goods_sort LIKE '%경제%' OR goods_sort LIKE '%경영%')
+            </if>
+            <if test="category == '예술/대중문화'">
+                (goods_sort LIKE '%예술%' OR goods_sort LIKE '%대중문화%')
+            </if>
+            <if test="category == '대학교재/과학'">
+                (goods_sort LIKE '%대학교재%' OR goods_sort LIKE '%과학%')
+            </if>
+            <if test="category == '자기계발/자격증'">
+                (goods_sort LIKE '%자기계발%' OR goods_sort LIKE '%자격증%')
+            </if>
+            <if test="category == '에세이/인문학'">
+                (goods_sort LIKE '%에세이%' OR goods_sort LIKE '%인문학%')
+            </if>
+            <if test="category == '어린이/만화'">
+                (goods_sort LIKE '%어린이%' OR goods_sort LIKE '%만화%' OR goods_sort LIKE '%좋은 부모%')
+            </if>
+        </if>
+    </where>
+    ORDER BY goods_credate DESC
+    LIMIT #{limit} OFFSET #{offset};
+</select>
+
+
+    <!-- 상품 상세 정보 조회 -->
+    <select id="selectGoodsDetail" resultMap="goodsResult" parameterType="String">
+        <![CDATA[
+        SELECT *
+        FROM t_shopping_goods
+        WHERE goods_id = #{goods_id}
+        ]]>
+    </select>
+
+	<!-- 키워드 자동 완성 -->
+	<select id="selectKeywordSearch" resultType="String" parameterType="String">
+        <![CDATA[
+        SELECT goods_title 
+        FROM t_shopping_goods
+        WHERE goods_title LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY goods_credate DESC
+        ]]>
+	</select>
+
+	<!-- 상품 상세 이미지 정보 조회 -->
+<!-- 	<select id="selectGoodsDetailImage" resultMap="goodsResult" parameterType="String">
+        <![CDATA[
+        SELECT d.goods_isbn, d.filename AS fileName
+        FROM t_goods_detail_image d
+        WHERE d.filetype != 'main_image'
+        AND d.goods_isbn = #{goods_isbn}
+        ]]>
+	</select> -->
+
+	<!-- 상품 검색 -->
+<!-- 	<select id="selectGoodsBySearchWord" resultMap="goodsResult" parameterType="String">
+        <![CDATA[
+        SELECT g.*, d.filename AS fileName
+        FROM t_shopping_goods g
+        JOIN t_goods_detail_image d ON g.goods_isbn = d.goods_isbn
+        WHERE d.filetype = 'main_image'
+        AND g.goods_title LIKE CONCAT('%', #{searchWord}, '%')
+        ORDER BY g.goods_credate DESC
+        ]]>
+	</select> -->
+
+	<!-- ISBN으로 책 조회 -->
+    <select id="selectGoodsByISBN" parameterType="string" resultType="GoodsVO">
+        SELECT * 
+        FROM t_shopping_goods 
+        WHERE goods_isbn = #{goods_isbn}
+    </select>
+
+    <insert id="insertGoods" parameterType="GoodsVO">
+	    INSERT INTO t_shopping_goods (
+	    	goods_id,
+	    	goods_sort,
+	        goods_title, 
+	        goods_writer, 
+	        goods_published_date, 
+	        goods_total_page,
+	        goods_isbn, 
+	        goods_delivery_price,
+	        goods_delivery_date,
+	        goods_price, 
+	        goods_sales_price, 
+	        goods_fileName
+	    ) VALUES (
+	        #{goods_isbn}, 
+	        #{goods_sort}, 
+	        #{goods_title}, 
+	        #{goods_writer}, 
+	        #{goods_published_date}, 
+	        #{goods_total_page},
+	        #{goods_isbn}, 
+	        #{goods_delivery_price},
+	        #{goods_delivery_date},
+	        #{goods_price}, 
+	        #{goods_sales_price}, 
+	        #{goods_fileName}
+	    )
+	</insert>
+
+    <!-- 기존 책 정보 업데이트 -->
+    <update id="updateGoods" parameterType="GoodsVO">
+        UPDATE t_shopping_goods 
+        SET goods_title = #{goods_title},
+            goods_writer = #{goods_writer},
+            goods_published_date = #{goods_published_date},
+            goods_total_page = #{goods_total_page},
+            goods_delivery_price = #{goods_delivery_price},
+            goods_delivery_date = #{goods_delivery_date},
+            goods_price = #{goods_price},
+            goods_sales_price = #{goods_sales_price},
+            goods_fileName = #{goods_fileName},
+            goods_sort = #{goods_sort},
+            goods_publisher = #{goods_publisher}
+        WHERE goods_isbn = #{goods_isbn}
+    </update>
+</mapper>

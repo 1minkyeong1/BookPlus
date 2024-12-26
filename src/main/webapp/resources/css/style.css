@@ -1,0 +1,7 @@
+/* styles.css */
+@import url('https://hangeul.pstatic.net/hangeul_static/css/nanum-square-neo.css');
+
+
+* {
+	 font-family: 'NanumSquareNeo', sans-serif; 
+}
